@@ -52,13 +52,6 @@ while event.running:
     pygame.display.update()
     clock.tick(60)
 
-    # # Get memory usage in kilobytes
-    # memory_usage_kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-
-    # # Convert to MB
-    # memory_usage_mb = memory_usage_kb / 1024
-
-    # print(f"Memory used: {memory_usage_mb:.2f} MB")
 
 
 
