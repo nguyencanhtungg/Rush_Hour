@@ -6,6 +6,7 @@ class Vehicles:
 
         }
         self.size_game = size_game
+        self.moved = []
         self.cells = [[0] * size_game for _ in range(size_game)]
 
 
@@ -64,6 +65,7 @@ class Vehicles:
     def move(self,vehicle, step):
         if self.check_move_valid(vehicle, step):
             self.vehicles[vehicle].add_move(step)
+            self.moved.append(vehicle)
             self.update_cells()
 
     def update_cells(self):
@@ -82,4 +84,12 @@ class Vehicles:
         for vehicle in self.vehicles.values():
             vehicle.reset_vehicle()
         self.update_cells()
+
+    def back_move(self):
+        if len(self.moved) > 0:
+            self.vehicles[self.moved.pop()].back_move()
+            self.update_cells()
+
+    def solve(self):
+        print("Don't have function solve")
     

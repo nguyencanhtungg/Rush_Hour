@@ -1,6 +1,17 @@
-import pygame, color
+import pygame, color, event
 
 pygame.init()
+
+def initial(screen_current, surface_game_current, surface_game_function_current, game_initial):
+    global screen, surface_game, surface_game_function, game
+    game = game_initial
+    screen = screen_current
+    surface_game = surface_game_current
+    surface_game_function = surface_game_function_current
+
+def next_game(game_current):
+    global game
+    game = game_current
 
 def draw_vehicles(surface_game, game):
     unit_cell = int(surface_game.get_width()/game.size_game)
@@ -23,8 +34,34 @@ def draw_arrow(surface_game,unit_cell, pos, path_arrow):
     surface_game.blit(arrow_image, (int((pos[1] - 1) * unit_cell), int((pos[0] - 1) * unit_cell)))
 
 
-def draw_elements(surface_game, game):
+def draw_game_main():
+    global surface_game, game
     unit_cell = int(surface_game.get_width()/game.size_game)
     draw_vehicles(surface_game, game)
-    draw_arrow(surface_game, unit_cell, (game.vehicles.get(1).versus, game.size_game), "/Users/nguyencanhtung/Program/python/Game/RushHour/resources/arrow.png")
+    draw_arrow(surface_game, unit_cell, (game.vehicles.get(1).versus, game.size_game), "RushHour/resources/image/arrow.png")
+
+def draw_current_vehicle(surface_game_function, currrent_vehicle):
+    surface_game_function.fill(color.colors.get(currrent_vehicle))
+
+def draw_button_icon(surface_game_fuction, rect, path):
+    icon = pygame.image.load(path)
+    icon = pygame.transform.scale(icon, rect.size)
+    surface_game_fuction.blit(icon, rect.topleft)
+
+def draw_function_buttons(surface_game_function):
+    pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_restart, border_radius=10)
+    draw_button_icon(surface_game_function, event.rect_button_restart, "RushHour/resources/image/restart.png")
+    pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_back, border_radius=10)
+    draw_button_icon(surface_game_function, event.rect_button_back, "RushHour/resources/image/back.png")
+    if event.solve_mode:
+        pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_solve, border_radius=10)
+        draw_button_icon(surface_game_function, event.rect_button_solve, "RushHour/resources/image/solve.png")
+
+
+
+
+def draw_game_function():
+    global surface_game_function
+    draw_current_vehicle(surface_game_function, event.currently_selecting)
+    draw_function_buttons(surface_game_function)
 

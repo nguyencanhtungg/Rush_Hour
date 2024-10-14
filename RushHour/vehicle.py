@@ -26,6 +26,11 @@ class Vehicle:
         self.pos = [-999999, self.initial]
         self.moves = [-999999]
 
+    def back_move(self):
+        if len(self.moves) > 1:
+            self.moves.pop()
+            self.pos.pop()
+
 
 
 
