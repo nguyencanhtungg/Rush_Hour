@@ -4,7 +4,7 @@ currentle_pos_x = -99
 currentle_pos_y = -99
 running = True
 dragging = False
-solve_mode = False
+admin_mode = False
 rect_button_restart = None
 rect_button_back = None
 rect_button_solve = None
@@ -15,7 +15,8 @@ game = None
 current_game = 1
 
 def initial(screen_current, surface_game_current, surface_game_function_current, game_initial):
-    global screen, surface_game, surface_game_function, game, rect_button_restart, rect_button_back, rect_button_solve, game
+    global screen, surface_game, surface_game_function, game,  game
+    global rect_button_restart, rect_button_back, rect_button_solve, rect_button_next_level, rect_button_prev_level
     game = game_initial
     screen = screen_current
     surface_game = surface_game_current
@@ -24,6 +25,10 @@ def initial(screen_current, surface_game_current, surface_game_function_current,
     rect_button_restart = pygame.Rect(surface_game_function.get_width() - 50, 25, 50, 50)
     rect_button_back = pygame.Rect(surface_game_function.get_width() - 50, 75, 50, 50)
     rect_button_solve = pygame.Rect(surface_game_function.get_width() - 50, 125, 50, 50)
+    
+    rect_button_next_level = pygame.Rect(surface_game_function.get_width() - 50, 175, 50, 50)
+    rect_button_prev_level = pygame.Rect(surface_game_function.get_width() - 50, 225, 50, 50)
+
 
 def next_game():
     global game, current_game
@@ -33,6 +38,16 @@ def next_game():
         current_game = 1
     game = level.levels.get(current_game)
     draw.next_game(game)
+
+def prev_game():
+    global game, current_game
+    game.restart_game()
+    current_game = current_game - 1
+    if current_game < 1:
+        current_game = len(level.levels)
+    game = level.levels.get(current_game)
+    draw.next_game(game)
+    
 
 def check_win():
     global game, current_game
@@ -46,7 +61,7 @@ def next_selecting(game):
         currently_selecting = 1
 
 def check_event_keyboard_game_main(surface_game, game, event):
-    global dragging, solve_mode, currently_selecting, currentle_pos_x, currentle_pos_y
+    global dragging, admin_mode, currently_selecting, currentle_pos_x, currentle_pos_y
     # KEYBOARD
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_TAB:
@@ -70,7 +85,7 @@ def check_event_keyboard_game_main(surface_game, game, event):
             for row in game.cells:
                 print(row)
         if event.key == pygame.K_BACKSLASH:
-            solve_mode = not solve_mode
+            admin_mode = not admin_mode
 
 def check_event_mouse_game_main(surface_game, game, event):
     # MOUSE
@@ -113,15 +128,18 @@ def check_event_quit(event):
                 running = False
 
 def check_event_game_function(surface_game, surface_game_function,game, event):
-    global rect_button_restart, rect_button_back, rect_button_solve
+    global rect_button_restart, rect_button_back, rect_button_solve, rec
     if event.type == pygame.MOUSEBUTTONDOWN:
         if rect_button_restart.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
             game.restart_game()
         if rect_button_back.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
             game.back_move()
-        if rect_button_solve.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and solve_mode:
+        if rect_button_solve.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and admin_mode:
             game.solve()
-
+        if rect_button_next_level.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and admin_mode:
+            next_game()
+        if rect_button_prev_level.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and admin_mode:
+            prev_game()
 
 def check_event():
     global surface_game,surface_game_function, game

@@ -53,9 +53,16 @@ def draw_function_buttons(surface_game_function):
     draw_button_icon(surface_game_function, event.rect_button_restart, "RushHour/resources/image/restart.png")
     pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_back, border_radius=10)
     draw_button_icon(surface_game_function, event.rect_button_back, "RushHour/resources/image/back.png")
-    if event.solve_mode:
+    if event.admin_mode:
         pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_solve, border_radius=10)
         draw_button_icon(surface_game_function, event.rect_button_solve, "RushHour/resources/image/solve.png")
+        pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_next_level, border_radius=10)
+        draw_button_icon(surface_game_function, event.rect_button_next_level, "RushHour/resources/image/right_arrow.png")
+
+        pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_prev_level, border_radius=10)
+        draw_button_icon(surface_game_function, event.rect_button_prev_level, "RushHour/resources/image/left_arrow.png")
+
+
 
 
 
