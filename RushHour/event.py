@@ -87,6 +87,13 @@ def check_event_keyboard_game_main(surface_game, game, event):
         if event.key == pygame.K_BACKSLASH:
             admin_mode = not admin_mode
 
+        if event.key == pygame.K_SLASH and admin_mode:
+            game.solve()
+        if event.key == pygame.K_PERIOD and admin_mode:
+            next_game()
+        if event.key == pygame.K_COMMA and admin_mode:
+            prev_game()
+
 def check_event_mouse_game_main(surface_game, game, event):
     # MOUSE
     global dragging, currently_selecting, currentle_pos_x, currentle_pos_y
