@@ -4,7 +4,7 @@ currentle_pos_x = -99
 currentle_pos_y = -99
 running = True
 dragging = False
-admin_mode = False
+admin_mode = True
 rect_button_restart = None
 rect_button_back = None
 rect_button_solve = None
@@ -14,13 +14,16 @@ surface_game_function = None
 game = None
 current_game = 1
 
+custom_map_mode = None
+
 def initial(screen_current, surface_game_current, surface_game_function_current, game_initial):
-    global screen, surface_game, surface_game_function, game,  game
-    global rect_button_restart, rect_button_back, rect_button_solve, rect_button_next_level, rect_button_prev_level
+    global screen, surface_game, surface_game_function, game,  game, custom_map_mode
+    global rect_button_restart, rect_button_back, rect_button_solve, rect_button_next_level, rect_button_prev_level, rect_button_custom_map_mode
     game = game_initial
     screen = screen_current
     surface_game = surface_game_current
     surface_game_function = surface_game_function_current
+    custom_map_mode = False
 
     rect_button_restart = pygame.Rect(surface_game_function.get_width() - 50, 25, 50, 50)
     rect_button_back = pygame.Rect(surface_game_function.get_width() - 50, 75, 50, 50)
@@ -28,6 +31,8 @@ def initial(screen_current, surface_game_current, surface_game_function_current,
     
     rect_button_next_level = pygame.Rect(surface_game_function.get_width() - 50, 175, 50, 50)
     rect_button_prev_level = pygame.Rect(surface_game_function.get_width() - 50, 225, 50, 50)
+
+    rect_button_custom_map_mode = pygame.Rect(surface_game_function.get_width() - 50, 275, 50, 50)
 
 
 def next_game():
@@ -37,6 +42,8 @@ def next_game():
     if current_game > len(level.levels):
         current_game = 1
     game = level.levels.get(current_game)
+    if game.len() == 0:
+        next_game()
     draw.next_game(game)
 
 def prev_game():
@@ -48,10 +55,13 @@ def prev_game():
     game = level.levels.get(current_game)
     draw.next_game(game)
     
+def turn_on_custom_map_mode():
+    global custom_map_mode
+    custom_map_mode = not custom_map_mode
 
 def check_win():
     global game, current_game
-    if game.get_vehicle(1).get_pos_last() == game.size_game - 1:
+    if game.len() > 0 and game.get_vehicle(1).get_pos_last() == game.size_game - 1:
         print("Win")
         next_game()
 def next_selecting(game):
@@ -84,15 +94,17 @@ def check_event_keyboard_game_main(surface_game, game, event):
         if event.key == pygame.K_c:
             for row in game.cells:
                 print(row)
+            print(custom_map_mode)
         if event.key == pygame.K_BACKSLASH:
             admin_mode = not admin_mode
 
-        if event.key == pygame.K_SLASH and admin_mode:
-            game.solve()
-        if event.key == pygame.K_PERIOD and admin_mode:
-            next_game()
-        if event.key == pygame.K_COMMA and admin_mode:
-            prev_game()
+        if admin_mode:
+            if event.key == pygame.K_SLASH :
+                game.solve()
+            if event.key == pygame.K_PERIOD :
+                next_game()
+            if event.key == pygame.K_COMMA :
+                prev_game()
 
 def check_event_mouse_game_main(surface_game, game, event):
     # MOUSE
@@ -135,18 +147,23 @@ def check_event_quit(event):
                 running = False
 
 def check_event_game_function(surface_game, surface_game_function,game, event):
-    global rect_button_restart, rect_button_back, rect_button_solve, rec
+    global rect_button_restart, rect_button_back, rect_button_solve
     if event.type == pygame.MOUSEBUTTONDOWN:
         if rect_button_restart.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
             game.restart_game()
         if rect_button_back.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
             game.back_move()
-        if rect_button_solve.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and admin_mode:
-            game.solve()
-        if rect_button_next_level.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and admin_mode:
-            next_game()
-        if rect_button_prev_level.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)) and admin_mode:
-            prev_game()
+        if admin_mode:
+            if rect_button_solve.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
+                game.solve()
+            if rect_button_next_level.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
+                next_game()
+            if rect_button_prev_level.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
+                prev_game()
+            if rect_button_custom_map_mode.collidepoint((event.pos[0] - surface_game.get_width(),event.pos[1] - 0)):
+                turn_on_custom_map_mode()
+        
+        
 
 def check_event():
     global surface_game,surface_game_function, game

@@ -1,5 +1,5 @@
-import pygame, sys, resource
-import vehicle, vehicles, color, draw, event, level
+import pygame, resource
+import vehicle, vehicles, color, draw, event, level, custom
 
 
 pygame.init()
@@ -20,21 +20,16 @@ surface_game_function_x = screen.get_width() - surface_game_function.get_width()
 surface_game_function_y = screen.get_height() - surface_game_function.get_height()
 surface_game_function.fill(color.colors.get("GREEN_PASTEL"))
 
+surface_game_custom = pygame.Surface((800,800))
+surface_game_custom.fill(color.colors.get("GREY"))
+surface_game_custom_function = pygame.Surface((200,800))
+surface_game_custom_function.fill(color.colors.get("GREEN_PASTEL"))
 
 
 
-
-# for row in game1.cells:
-#     print(row)
-
-event.initial(screen, surface_game, surface_game_function, level.levels.get(1))
-draw.initial(screen, surface_game, surface_game_function, level.levels.get(1))
-while event.running:
-    
+def game_main():
     draw.draw_game_main()
     draw.draw_game_function()
-
-
 
     event.check_win()
     event.check_event()
@@ -44,7 +39,22 @@ while event.running:
     screen.blit(surface_game,(surface_game_x,surface_game_y))
     screen.blit(surface_game_function, (surface_game_function_x,surface_game_function_y))
 
+def game_custom():
+    custom.draw_board()
+    custom.draw_function()
 
+    custom.check_event()
+
+level.import_levels_data()
+event.initial(screen, surface_game, surface_game_function, level.levels.get(1))
+draw.initial(screen, surface_game, surface_game_function, level.levels.get(1))
+custom.initial(screen, surface_game_custom, surface_game_custom_function)
+while event.running:
+    if not event.custom_map_mode:
+        game_main()
+
+    if event.custom_map_mode:
+        game_custom()
 
 
     pygame.display.update()
@@ -52,6 +62,6 @@ while event.running:
 
 
 
-
+level.save_levels()
+print("Quited")
 pygame.quit()
-sys.exit()

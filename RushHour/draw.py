@@ -9,13 +9,17 @@ def initial(screen_current, surface_game_current, surface_game_function_current,
     surface_game = surface_game_current
     surface_game_function = surface_game_function_current
 
+    global image_grid
+    image_grid = pygame.image.load("RushHour/resources/image/grid.png")
+
 def next_game(game_current):
     global game
     game = game_current
 
 def draw_vehicles(surface_game, game):
     unit_cell = int(surface_game.get_width()/game.size_game)
-    surface_game.fill(color.colors["GREY"])
+    # surface_game.fill(color.colors["GREY"])
+    surface_game.blit(image_grid, (0,0))
     for i in range(1, game.len() + 1):
         if game.vehicles.get(i).versus > 0:
             draw_vehicle(surface_game,unit_cell, i,((game.vehicles.get(i).versus),game.vehicles.get(i).get_pos_last()), (game.vehicles.get(i).versus, game.vehicles.get(i).get_pos_last() + game.vehicles.get(i).size - 1))
@@ -36,9 +40,11 @@ def draw_arrow(surface_game,unit_cell, pos, path_arrow):
 
 def draw_game_main():
     global surface_game, game
-    unit_cell = int(surface_game.get_width()/game.size_game)
-    draw_vehicles(surface_game, game)
-    draw_arrow(surface_game, unit_cell, (game.vehicles.get(1).versus, game.size_game), "RushHour/resources/image/arrow.png")
+    if game.len() > 0:
+        unit_cell = int(surface_game.get_width()/game.size_game)
+        draw_vehicles(surface_game, game)
+        draw_arrow(surface_game, unit_cell, (game.vehicles.get(1).versus, game.size_game), "RushHour/resources/image/arrow.png")
+    
 
 def draw_current_vehicle(surface_game_function, currrent_vehicle):
     surface_game_function.fill(color.colors.get(currrent_vehicle))
@@ -61,6 +67,10 @@ def draw_function_buttons(surface_game_function):
 
         pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_prev_level, border_radius=10)
         draw_button_icon(surface_game_function, event.rect_button_prev_level, "RushHour/resources/image/left_arrow.png")
+
+        pygame.draw.rect(surface_game_function, color.colors.get("BLUE_SKY"), event.rect_button_custom_map_mode, border_radius=10)
+        draw_button_icon(surface_game_function, event.rect_button_custom_map_mode, "RushHour/resources/image/edit.png")
+
 
 
 

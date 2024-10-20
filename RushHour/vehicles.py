@@ -1,5 +1,6 @@
 import vehicle
 
+
 class Vehicles:
     def __init__(self, size_game):
         self.vehicles = {
@@ -12,14 +13,23 @@ class Vehicles:
 
 
     def add_vehicle(self, size,versus,initial):
-        self.vehicles[len(self.vehicles) + 1] = vehicle.Vehicle(size,versus,initial)
-        if versus > 0:
-            for col in range(initial - 1, initial + size - 1):
-                self.cells[versus - 1][col] = len(self.vehicles)
-        else:
-            for row in range(initial - 1, initial + size - 1):
-                self.cells[row][-versus - 1] = len(self.vehicles)
+        if self.check_add_vehicle_valid(size, versus, initial):
+            self.vehicles[len(self.vehicles) + 1] = vehicle.Vehicle(size,versus,initial)
+        self.update_cells()
 
+    def check_add_vehicle_valid(self, size, versus, initial):
+        if not (0 <= abs(versus) <= self.size_game and 0 <= initial <= self.size_game and abs(initial) + size - 1 <= self.size_game):
+            return False
+        if versus > 0:
+            for col in range(initial, initial + size):
+                if self.cells[versus - 1][col - 1] != 0:
+                    return False
+            return True
+        else:
+            for row in range(initial, initial + size ):
+                if self.cells[row - 1][-versus - 1] != 0:
+                    return False
+            return True
     def len(self):
         return len(self.vehicles)
 
@@ -84,6 +94,14 @@ class Vehicles:
         for vehicle in self.vehicles.values():
             vehicle.reset_vehicle()
         self.update_cells()
+
+    def reset_game(self):
+        self.vehicles.clear()
+        self.update_cells()
+
+    def pop_last_vehicle(self):
+        if len(self.vehicles) > 0:
+            self.vehicles.popitem()
 
     def back_move(self):
         if len(self.moved) > 0:
