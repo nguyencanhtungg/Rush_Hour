@@ -1,5 +1,5 @@
 import pygame, resource
-import vehicle, vehicles, color, draw, event, level, custom
+import vehicle, vehicles, color, draw, event, level, custom, sound
 
 
 pygame.init()
@@ -49,6 +49,7 @@ level.import_levels_data()
 event.initial(screen, surface_game, surface_game_function, level.levels.get(1))
 draw.initial(screen, surface_game, surface_game_function, level.levels.get(1))
 custom.initial(screen, surface_game_custom, surface_game_custom_function)
+sound.play_background_music()
 while event.running:
     if not event.custom_map_mode:
         game_main()

@@ -25,12 +25,23 @@ class RushHourSolver:
                 return path
             
             for vehicle_id in current_state.vehicles.keys():
-                for step in [1,-1]:
+                for step in range(1, self.inittial_state.size_game - 1):
                     if current_state.check_move_valid(vehicle_id, step):
                         new_state = copy.deepcopy(current_state)
                         new_state.move(vehicle_id, step)
 
                         queue.append((new_state, path + [(vehicle_id, step)]))
+                    else :
+                        break
+                for step in range(-1, -(self.inittial_state.size_game - 1), -1):
+                    if current_state.check_move_valid(vehicle_id, step):
+                        new_state = copy.deepcopy(current_state)
+                        new_state.move(vehicle_id, step)
+
+                        queue.append((new_state, path + [(vehicle_id, step)]))
+                    else :
+                        break
+                
 
         return None
 
@@ -43,22 +54,33 @@ class RushHourSolver:
             state_key.append((vehicle_id, vehicle.get_pos_last()))
         return tuple(state_key)
     
+
+def solve(game):
+    sol = RushHourSolver(game)
+    solution = sol.solver()
+    if solution == None:
+        print("No solution")
+    else :
+        print("Steps: ",len(solution))
+        print(solution)
 # TEST SOLVER
-state = vehicles.Vehicles(6)
-state.add_vehicle(2,3,4)
-state.add_vehicle(2,1,4)
-state.add_vehicle(2,4,5)
-state.add_vehicle(2,6,5)
-state.add_vehicle(2,5,2)
-state.add_vehicle(2,-1,5)
-state.add_vehicle(3,-3,1)
-state.add_vehicle(3,-6,1)
-state.add_vehicle(3,-4,4)
+# state = vehicles.Vehicles(6)
+# state.add_vehicle(2,3,4)
+# state.add_vehicle(2,1,4)
+# state.add_vehicle(2,4,5)
+# state.add_vehicle(2,6,5)
+# state.add_vehicle(2,5,2)
+# state.add_vehicle(2,-1,5)
+# state.add_vehicle(3,-3,1)
+# state.add_vehicle(3,-6,1)
+# state.add_vehicle(3,-4,4)
 
-solver_state = RushHourSolver(state)
-solution = solver_state.solver()
 
-if solution == None:
-    print("No solution")
-else :
-    print(len(solution))
+# solver_state = RushHourSolver(state)
+# solution = solver_state.solver()
+
+# if solution == None:
+#     print("No solution")
+# else :
+#     print(len(solution))
+#     print(solution)

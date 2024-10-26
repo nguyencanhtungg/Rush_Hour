@@ -1,4 +1,4 @@
-import vehicle
+import vehicle, solver
 
 
 class Vehicles:
@@ -109,5 +109,6 @@ class Vehicles:
             self.update_cells()
 
     def solve(self):
-        print("Don't have function solve")
+        solver.solve(self)
+
     
