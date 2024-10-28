@@ -16,6 +16,7 @@ dragging_truck = False
 rect_car_dragging = None
 rect_truck_dragging = None
 vertical = True
+show_pop_button = False
 
 def initial(screen_current, surface_board_current, surface_function_current):
     global screen, surface_board, surface_function, game, unit_cell, game_size
@@ -62,7 +63,7 @@ def draw_board():
 def draw_function():
     global screen
     global surface_function, current_vehicle, rect_car, rect_truck, rect_car_dragging, rect_truck_dragging
-    global rect_button_reset, rect_button_back
+    global rect_button_reset, rect_button_back, show_pop_button
     pygame.draw.rect(surface_function, color.colors.get(current_vehicle), rect_car, border_radius=10)
     pygame.draw.rect(surface_function, color.colors.get(current_vehicle), rect_truck, border_radius=10)
 
@@ -78,8 +79,9 @@ def draw_function():
     pygame.draw.rect(surface_function, color.colors.get("BLUE_SKY"), rect_button_exit, border_radius=10)
     draw.draw_button_icon(surface_function, rect_button_exit, "RushHour/resources/image/exit.png")
 
-    pygame.draw.rect(surface_function, color.colors.get("BLUE_SKY"), rect_button_pop_level, border_radius=10)
-    draw.draw_button_icon(surface_function, rect_button_pop_level, "RushHour/resources/image/pop.png")
+    if show_pop_button:
+        pygame.draw.rect(surface_function, color.colors.get("BLUE_SKY"), rect_button_pop_level, border_radius=10)
+        draw.draw_button_icon(surface_function, rect_button_pop_level, "RushHour/resources/image/pop.png")
 
     
     
@@ -122,6 +124,7 @@ def check_event_mouse(eve):
     check_button(eve)
 
 def check_button(eve):
+    global show_pop_button
     if eve.type == pygame.MOUSEBUTTONDOWN:
         if rect_button_reset.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
             game.reset_game()
@@ -132,13 +135,13 @@ def check_button(eve):
             exit()
         if rect_button_save.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
             save_level()
-        if rect_button_pop_level.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
+        if show_pop_button and rect_button_pop_level.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
             level.pop_level()
         sound.play_sound_wood()
 
         
 def check_event_keyboard(eve):
-    global vertical, game
+    global vertical, game, show_pop_button
     if eve.type == pygame.KEYDOWN:
         if eve.key == pygame.K_SPACE:
             change_vertical()
@@ -147,6 +150,9 @@ def check_event_keyboard(eve):
             print(vertical)
             for row in game.cells:
                 print(row)
+                
+        if eve.key == pygame.K_x:
+            show_pop_button = not show_pop_button
         
 
 def check_dragging_car(eve):
@@ -272,4 +278,3 @@ def check_event_quit(eve):
 
 
 
-    
