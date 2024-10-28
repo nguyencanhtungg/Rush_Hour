@@ -95,7 +95,6 @@ def check_event_keyboard_game_main(surface_game, game, event):
             for row in game.cells:
                 print(row)
             print(custom_map_mode)
-            print(game.vehicles[2].get_pos_last())
         if event.key == pygame.K_BACKSLASH:
             admin_mode = not admin_mode
 

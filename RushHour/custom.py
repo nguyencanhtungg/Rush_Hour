@@ -17,8 +17,6 @@ rect_car_dragging = None
 rect_truck_dragging = None
 vertical = True
 
-delete_mode = False
-
 def initial(screen_current, surface_board_current, surface_function_current):
     global screen, surface_board, surface_function, game, unit_cell, game_size
     global rect_car, rect_truck, rect_car_dragging, rect_truck_dragging
@@ -80,9 +78,8 @@ def draw_function():
     pygame.draw.rect(surface_function, color.colors.get("BLUE_SKY"), rect_button_exit, border_radius=10)
     draw.draw_button_icon(surface_function, rect_button_exit, "RushHour/resources/image/exit.png")
 
-    if delete_mode:
-        pygame.draw.rect(surface_function, color.colors.get("BLUE_SKY"), rect_button_pop_level, border_radius=10)
-        draw.draw_button_icon(surface_function, rect_button_pop_level, "RushHour/resources/image/pop.png")
+    pygame.draw.rect(surface_function, color.colors.get("BLUE_SKY"), rect_button_pop_level, border_radius=10)
+    draw.draw_button_icon(surface_function, rect_button_pop_level, "RushHour/resources/image/pop.png")
 
     
     
@@ -135,9 +132,8 @@ def check_button(eve):
             exit()
         if rect_button_save.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
             save_level()
-        if delete_mode:
-            if rect_button_pop_level.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
-                level.pop_level()
+        if rect_button_pop_level.collidepoint((eve.pos[0] - surface_board.get_width(), eve.pos[1])):
+            level.pop_level()
         sound.play_sound_wood()
 
         
@@ -147,8 +143,6 @@ def check_event_keyboard(eve):
         if eve.key == pygame.K_SPACE:
             change_vertical()
 
-        if eve.key == pygame.K_x:
-            del_mode()
         if eve.key == pygame.K_c:
             print(vertical)
             for row in game.cells:
@@ -199,6 +193,7 @@ def add_vehicle(eve, size_vehicle):
         else :
             if 0 <= cell_x <= game_size - size_vehicle + 1 and 0 <= cell_y <= game_size:
                 game.add_vehicle(size_vehicle, -cell_y, cell_x)
+                print("add truck")
                 update_current_vehicle()
 
         
@@ -270,10 +265,6 @@ def save_level():
         update_current_vehicle()
     else :
         print("A game can't empty")
-
-def del_mode():
-    global delete_mode
-    delete_mode = not delete_mode
 
 def check_event_quit(eve):
     if eve.type == pygame.QUIT:
