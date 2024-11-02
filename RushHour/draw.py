@@ -81,4 +81,9 @@ def draw_game_function():
     global surface_game_function
     draw_current_vehicle(surface_game_function, event.currently_selecting)
     draw_function_buttons(surface_game_function)
+    
+    # Draw current game number
+    font = pygame.font.Font(None, 36)
+    text = font.render(f"Level: {event.current_game}", True, color.colors.get("BLACK"))
+    surface_game_function.blit(text, (10, 10))
 

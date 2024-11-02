@@ -199,7 +199,6 @@ def add_vehicle(eve, size_vehicle):
         else :
             if 0 <= cell_x <= game_size - size_vehicle + 1 and 0 <= cell_y <= game_size:
                 game.add_vehicle(size_vehicle, -cell_y, cell_x)
-                print("add truck")
                 update_current_vehicle()
 
         
